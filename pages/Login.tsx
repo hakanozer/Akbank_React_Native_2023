@@ -21,6 +21,7 @@ btnText
 import { useNavigation } from '@react-navigation/native';
 import { Toast } from 'toastify-react-native';
 import { userLogin } from '../utils/service';
+import { userSetData } from '../utils/storage';
 
 
 export default function Login() {
@@ -39,9 +40,9 @@ export default function Login() {
     }else if ( password.length < 5 ) {
       Alert.alert('Fail', 'Password 5 chars Fail!')
     }else {
-      userLogin(username, password).then(res => {
+      userLogin(username, password).then(async res => {
         if( res.status === 200 ) {
-          
+          await userSetData(res.data)
           //navigation.navigate("Product")
           navigation.replace("Product")
         }

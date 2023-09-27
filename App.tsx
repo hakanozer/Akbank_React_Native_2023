@@ -7,6 +7,7 @@ import ToastManager from 'toastify-react-native';
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Product from './pages/Product'
+import ProductDetail from './pages/ProductDetail'
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export default function App() {
           <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
           <Stack.Screen name="Register" component={Register} options={{headerShown: false}} />
           <Stack.Screen name="Product" component={Product} options={{headerShown: false}} />
+          <Stack.Screen name="ProductDetail" component={ProductDetail} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

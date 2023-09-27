@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { IJWTUserModel } from '../models/IJWTUserModel'
+import { IProduct, IProducts } from '../models/IProducts'
 
 const base_url = "https://dummyjson.com/"
 const config = axios.create({
@@ -18,3 +19,18 @@ export const userLogin = ( username: string, password: string ) => {
   }
   return config.post<IJWTUserModel>('auth/login', sendObj)
 }
+
+
+// all products
+export const allProduct = () => {
+  return config.get<IProducts>('products')
+}
+
+
+// single product
+export const singleProduct = (id: number) => {
+  return config.get<IProduct>('products/'+id)
+}
+
+
+
