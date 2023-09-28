@@ -21,12 +21,34 @@ btnText
 import { useNavigation } from '@react-navigation/native';
 import { Toast } from 'toastify-react-native';
 import { userLogin } from '../utils/service';
-import { userSetData } from '../utils/storage';
+import { likesGetData, userSetData } from '../utils/storage';
+import { ILikeAction } from '../useRedux/LikesReducer';
+import { LikesEnum } from '../useRedux/LikesEnum';
+import { useDispatch } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 export default function Login() {
 
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+
+  // Defult Redux Data
+  useEffect(()=> {
+    //AsyncStorage.removeItem('@likes')
+    
+    likesGetData().then(obj => {
+    if (obj) {
+      obj.forEach(item => {
+        const sendObj: ILikeAction = {
+          type: LikesEnum.LIKE_ADD,
+          payload: item
+        } 
+        dispatch(sendObj)
+      })
+    }
+  })
+  }, [])
 
   // state create
   const [username, setUserName] = useState('kminchelle')
@@ -44,7 +66,7 @@ export default function Login() {
         if( res.status === 200 ) {
           await userSetData(res.data)
           //navigation.navigate("Product")
-          navigation.replace("Product")
+          navigation.replace("AppTab")
         }
       }).catch(error => {
         console.log(error.message)

@@ -5,9 +5,18 @@ import { IProduct } from '../models/IProducts';
 import BackBtn from '../components/BackBtn';
 import { backgroundColor, paddinSpace, statusBarHeight } from '../utils/theme';
 import { singleProduct } from '../utils/service';
+import { AntDesign } from '@expo/vector-icons';
+import { StateType } from '../useRedux/Store';
+import { useSelector, useDispatch } from 'react-redux'
+import { ILikeAction } from '../useRedux/LikesReducer';
+import { LikesEnum } from '../useRedux/LikesEnum';
 
 export default function ProductDetail() {
 
+  const likesData = useSelector( (obj: StateType) => obj.LikesReducer )
+  const dispatch = useDispatch()
+
+  const [likeStatus, setLikeStatus] = useState(false)
   const [proItem, setProItem] = useState<IProduct>()
   const [bigImage, setBigImage] = useState('')
   const navigation = useNavigation()
@@ -20,12 +29,33 @@ export default function ProductDetail() {
         if (res.status === 200) {
           setBigImage(res.data.images[0])
           setProItem(res.data)
+          const index = likesData.findIndex((item) => item.id === res.data.id)
+          if(index > -1) {
+            setLikeStatus(true)
+          }
         }else {
           navigation.goBack()
         }
       })
     }
   }, [])
+
+  const fncLikeStatus = () => {
+    if (!likeStatus) {
+        const obj: ILikeAction = {
+          type: LikesEnum.LIKE_ADD,
+          payload: proItem!
+        }
+        dispatch(obj)
+    }else {
+        const obj: ILikeAction = {
+          type: LikesEnum.LIKE_REMOVE,
+          payload: proItem!
+        }
+        dispatch(obj)
+    }
+    setLikeStatus(!likeStatus)
+  }
 
   return(
     <ScrollView style={styles.container}>
@@ -34,7 +64,15 @@ export default function ProductDetail() {
         <View style={{ marginTop: 20,  }}>
           <Text style={styles.title}>{proItem.title}</Text>
           <View style={{marginTop: 10,}}>
-            <Image source={{ uri: bigImage }} style={{ height: 320, marginBottom: 10, }} />
+            <View>
+                <View style={{position: 'absolute', right: 10,  top: 10, zIndex: 1,}}>
+                  <TouchableOpacity onPress={fncLikeStatus}>
+                    <AntDesign name="heart" size={28} color={ likeStatus === true ? "#4287f5" : "red" } />
+                  </TouchableOpacity>
+                </View>
+              
+              <Image source={{ uri: bigImage }} style={{ height: 320, marginBottom: 10, }} />
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
                 { proItem.images.map((item, index) =>
