@@ -40,12 +40,16 @@ export default function Product() {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size='large' animating={load} hidesWhenStopped={!load}/>
-      <FlatList 
-        data={arr}
-        renderItem={({item}) => <ProductItem item={item} /> }
-        keyExtractor={(item, index) => index.toString() }
-      />
+      { load && 
+        <ActivityIndicator size='large' animating={load} hidesWhenStopped={!load}/>
+      }
+      { !load && 
+        <FlatList 
+          data={arr}
+          renderItem={({item}) => <ProductItem item={item} /> }
+          keyExtractor={(item, index) => index.toString() }
+        />
+      }
     </View>
   )
 
@@ -55,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: backgroundColor,
-    paddingTop: statusBarHeight,
+    paddingTop: paddinSpace,
     paddingLeft: paddinSpace,
     paddingRight: paddinSpace,
     paddingBottom: paddinSpace,

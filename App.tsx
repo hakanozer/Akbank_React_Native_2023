@@ -1,4 +1,4 @@
-import { StyleSheet, View, } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -8,6 +8,7 @@ import {Provider} from 'react-redux'
 import { store } from './useRedux/Store'
 
 // import pages
+import Welcome from './pages/Welcome'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Product from './pages/Product'
@@ -17,6 +18,23 @@ import Profile from './pages/Profile'
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator()
+
+// Custom Header
+const productHeader = (navigation: any) => 
+<View style={{backgroundColor: '#4287f5', width:'100%', height: 75}}>
+  <View style={{  marginTop: 40, width: '100%', height: 35 }}>
+    <View style={{justifyContent:'space-between', flexDirection: 'row' }}>
+      <View style={{ height: 35, width: '33%' }}></View>
+      <View style={{ height: 35, width: '33%' }}></View>
+      <View style={{ height: 35, width: '33%' }}>
+        <TouchableOpacity onPress={ () => navigation.navigate("Likes") }>
+          <Text style={{textAlign: 'center', fontSize: 16}}> Goto </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+  <Text>Header</Text>
+</View>
 
 // Login - Register - Stack
 const LoginStack = () => 
@@ -28,7 +46,7 @@ const LoginStack = () =>
 // Product - Product Detail - Stack
 const ProductStack = () => 
 <Stack.Navigator>
-  <Stack.Screen name="Product" component={Product} options={{headerShown: false}} />
+  <Stack.Screen name="Product" component={Product} options={{header: ({ route, navigation } : any) => productHeader(navigation) }} />
   <Stack.Screen name="ProductDetail" component={ProductDetail} options={{headerShown: false}} />
 </Stack.Navigator>
 
@@ -93,6 +111,7 @@ export default function App() {
     <NavigationContainer>
       <ToastManager style={{ top: 20, width: '100%',}} />
       <Stack.Navigator>
+          <Stack.Screen name="Welcome" component={Welcome} options={{headerShown: false}} />
           <Stack.Screen name="LoginStack" component={LoginStack} options={{headerShown: false}} />
           <Stack.Screen name="AppTab" component={AppTab} options={{headerShown: false}} />
       </Stack.Navigator>
